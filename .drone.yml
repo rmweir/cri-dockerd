@@ -8,7 +8,7 @@ platform:
 
 steps:
 - name: prepare-amd64-binaries-pr
-  image: ubuntu:20.04
+  image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
   - make -C packaging/static static-linux
@@ -21,7 +21,7 @@ steps:
     - pull_request
 
 - name: prepare-amd64-binaries-tag
-  image: ubuntu:20.04
+  image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
   - make -C packaging/static static-linux
@@ -78,7 +78,7 @@ platform:
 
 steps:
 - name: prepare-arm64-binaries-pr
-  image: ubuntu:20.04
+  image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
   - make -C packaging/static cross-arm
@@ -91,7 +91,7 @@ steps:
     - pull_request
 
 - name: prepare-arm64-binaries-tag
-  image: ubuntu:20.04
+  image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
   - make -C packaging/static static-linux
