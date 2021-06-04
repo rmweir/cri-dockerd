@@ -1,0 +1,141 @@
+---
+kind: pipeline
+name: default-linux-amd64
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: prepare-amd64-binaries-pr
+  image: ubuntu:20.04
+  commands:
+  - apt-get -y update && apt-get -y install make curl tar
+  - make -C packaging/static static-linux
+  settings:
+    build_args:
+    - VERSION=${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}
+  when:
+    event:
+    - push
+    - pull_request
+
+- name: prepare-amd64-binaries-tag
+  image: ubuntu:20.04
+  commands:
+  - apt-get -y update && apt-get -y install make curl tar
+  - make -C packaging/static static-linux
+  settings:
+    build_args:
+    - VERSION=${DRONE_TAG}
+  when:
+    event:
+    - tag
+
+- name: github_binary_prerelease
+  pull: default
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: github_token
+    checksum:
+    - sha256
+    files:
+    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}.tgz"
+    prerelease: true
+  when:
+    event:
+    - tag
+    ref:
+      include:
+      - "refs/tags/*rc*"
+      - "refs/tags/*alpha*"
+
+- name: github_binary_release
+  pull: default
+  image: plugins/github-release
+  settings:
+    checksum:
+    - sha256
+    files:
+    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}.tgz"
+    api_key:
+      from_secret: github_token
+  when:
+    event:
+    - tag
+    ref:
+      exclude:
+      - "refs/tags/*rc*"
+      - "refs/tags/*alpha*"
+---
+kind: pipeline
+name: default-linux-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: prepare-arm64-binaries-pr
+  image: ubuntu:20.04
+  commands:
+  - apt-get -y update && apt-get -y install make curl tar
+  - make -C packaging/static cross-arm
+  settings:
+    build_args:
+    - VERSION=${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}
+  when:
+    event:
+    - push
+    - pull_request
+
+- name: prepare-arm64-binaries-tag
+  image: ubuntu:20.04
+  commands:
+  - apt-get -y update && apt-get -y install make curl tar
+  - make -C packaging/static static-linux
+  settings:
+    build_args:
+    - VERSION=${DRONE_TAG}
+  when:
+    event:
+    - tag
+
+- name: github_binary_prerelease
+  pull: default
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: github_token
+    checksum:
+    - sha256
+    files:
+    - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}.tgz"
+    prerelease: true
+  when:
+    event:
+    - tag
+    ref:
+      include:
+      - "refs/tags/*rc*"
+      - "refs/tags/*alpha*"
+
+- name: github_binary_release
+  pull: default
+  image: plugins/github-release
+  settings:
+    checksum:
+    - sha256
+    files:
+    - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}.tgz"
+    api_key:
+      from_secret: github_token
+  when:
+    event:
+    - tag
+    ref:
+      exclude:
+      - "refs/tags/*rc*"
+      - "refs/tags/*alpha*"
+
