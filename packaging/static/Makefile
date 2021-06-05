@@ -25,7 +25,7 @@ static-linux:
 	mkdir -p build/linux/cri-dockerd
 	cd $(APP_DIR) && go get && env GOOS=linux GOARCH=amd64 go build -o cri-dockerd
 	mv $(APP_DIR)/cri-dockerd build/linux/cri-dockerd/cri-dockerd
-	tar -C build/linux -c -z -f build/linux/cri-dockerd-$(STATIC_VERSION).tgz cri-dockerd
+	tar -C build/linux -c -z -f build/linux/cri-dockerd-$(STATIC_VERSION)-linux-amd64.tgz cri-dockerd
 
 .PHONY: hash_files
 hash_files:
@@ -37,7 +37,7 @@ cross-mac:
 	mkdir -p build/mac/cri-dockerd
 	cd $(APP_DIR) && go get && env GOOS=darwin GOARCH=amd64 go build -o cri-dockerd-darwin-amd64
 	mv $(APP_DIR)/cri-dockerd-darwin-amd64 build/mac/cri-dockerd/cri-dockerd
-	tar -C build/mac -c -z -f build/mac/cri-dockerd-$(STATIC_VERSION).tgz cri-dockerd
+	tar -C build/mac -c -z -f build/mac/cri-dockerd-$(STATIC_VERSION)-darwin-amd64.tgz cri-dockerd
 
 .PHONY: cross-win
 cross-win:
@@ -54,4 +54,4 @@ cross-arm: ## create tgz with linux armhf client only
 	mkdir -p build/arm/cri-dockerd
 	cd $(APP_DIR) && go get && env GOOS=linux GOARCH=arm64 go build -o cri-dockerd-arm64
 	mv $(APP_DIR)/cri-dockerd-arm64 build/arm/cri-dockerd/cri-dockerd
-	tar -C build/arm -c -z -f build/arm/cri-dockerd-$(STATIC_VERSION).tgz cri-dockerd
+	tar -C build/arm -c -z -f build/arm/cri-dockerd-$(STATIC_VERSION)-linux-arm64.tgz cri-dockerd
