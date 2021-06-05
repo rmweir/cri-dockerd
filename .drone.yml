@@ -11,7 +11,7 @@ steps:
   image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
-  - make -C packaging/static static-linux
+  - make -C packaging/static static-linux cross-arm
   environment:
     VERSION: "${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}"
   when:
@@ -23,7 +23,7 @@ steps:
   image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
-  - make -C packaging/static static-linux
+  - make -C packaging/static static-linux cross-arm
   environment:
     VERSION: "${DRONE_TAG}"
   when:
@@ -40,73 +40,6 @@ steps:
     - sha256
     files:
     - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}-linux-amd64.tgz"
-    prerelease: true
-  when:
-    event:
-    - tag
-    ref:
-      include:
-      - "refs/tags/*rc*"
-      - "refs/tags/*alpha*"
-
-- name: github_binary_release
-  pull: default
-  image: plugins/github-release
-  settings:
-    checksum:
-    - sha256
-    files:
-    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}-linux-amd64.tgz"
-    api_key:
-      from_secret: github_token
-  when:
-    event:
-    - tag
-    ref:
-      exclude:
-      - "refs/tags/*rc*"
-      - "refs/tags/*alpha*"
----
-kind: pipeline
-name: default-linux-arm64
-
-platform:
-  os: linux
-  arch: arm64
-
-steps:
-- name: prepare-arm64-binaries-pr
-  image: golang:1.16.4
-  commands:
-  - apt-get -y update && apt-get -y install make curl tar
-  - make -C packaging/static cross-arm
-  environment:
-    VERSION: "${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}"
-  when:
-    event:
-    - push
-    - pull_request
-
-- name: prepare-arm64-binaries-tag
-  image: golang:1.16.4
-  commands:
-  - apt-get -y update && apt-get -y install make curl tar
-  - make -C packaging/static cross-arm
-  environment:
-    VERSION: "${DRONE_TAG}"
-  when:
-    event:
-    - tag
-
-- name: github_binary_prerelease
-  pull: default
-  image: plugins/github-release
-  settings:
-    api_key:
-      from_secret: github_token
-    checksum:
-    - sha256
-    files:
     - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}-linux-arm64.tgz"
     prerelease: true
   when:
@@ -124,6 +57,7 @@ steps:
     checksum:
     - sha256
     files:
+    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}-linux-amd64.tgz"
     - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}-linux-arm64.tgz"
     api_key:
       from_secret: github_token
@@ -134,4 +68,3 @@ steps:
       exclude:
       - "refs/tags/*rc*"
       - "refs/tags/*alpha*"
-
