@@ -39,7 +39,7 @@ steps:
     checksum:
     - sha256
     files:
-    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}.tgz"
+    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}-linux-amd64.tgz"
     prerelease: true
   when:
     event:
@@ -56,7 +56,7 @@ steps:
     checksum:
     - sha256
     files:
-    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}.tgz"
+    - "packaging/static/build/linux/cri-dockerd-${DRONE_TAG}-linux-amd64.tgz"
     api_key:
       from_secret: github_token
   when:
@@ -107,7 +107,7 @@ steps:
     checksum:
     - sha256
     files:
-    - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}.tgz"
+    - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}-linux-arm64.tgz"
     prerelease: true
   when:
     event:
@@ -124,7 +124,7 @@ steps:
     checksum:
     - sha256
     files:
-    - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}.tgz"
+    - "packaging/static/build/arm/cri-dockerd-${DRONE_TAG}-linux-arm64.tgz"
     api_key:
       from_secret: github_token
   when:
