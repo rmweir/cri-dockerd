@@ -91,7 +91,7 @@ steps:
   image: golang:1.16.4
   commands:
   - apt-get -y update && apt-get -y install make curl tar
-  - make -C packaging/static static-linux
+  - make -C packaging/static cross-arm
   environment:
     VERSION: "${DRONE_TAG}"
   when:
