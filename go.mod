@@ -1,6 +1,6 @@
 module github.com/Mirantis/cri-dockerd
 
-go 1.14
+go 1.16
 
 require (
 	github.com/Microsoft/hcsshim v0.8.10-0.20200715222032-5eafd1556990
